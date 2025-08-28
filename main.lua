@@ -3,6 +3,8 @@ showText = false
 
 function love.load()
 
+    love.window.setMode(800, 600, {resizable=true, vsync=0, minwidth=400, minheight=300})
+
     vitorsus = love.graphics.newImage("vitorSUS.png")
 
     bar = love.graphics.newImage("bar.jpg")
@@ -51,3 +53,4 @@ function love.draw()
 end
 
 end
+
