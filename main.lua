@@ -1,9 +1,12 @@
 nameVP = "Victor"
 showText = false
+
+-- bl = botao largura
+-- ba = botao altura
 bl1 = 0
+ba1 = 0
 bl2 = 0
-bl3 = 0
-bl4 = 0
+ba2 = 0
 
 function love.load()
 
@@ -73,12 +76,12 @@ end
     love.graphics.rectangle('fill', 10, 10, 10, 10)
 
 --exit
-    love.graphics.rectangle('fill', 30, 30, bl1, bl2)
+    love.graphics.rectangle('fill', 30, 30, bl1, ba1)
 
 --fechar menu
     love.graphics.setColor(100, 100, 0)
 
-    love.graphics.rectangle('fill', 30, 50, bl3, bl4) -- fecha o menu
+    love.graphics.rectangle('fill', 30, 50, bl2, ba2) -- fecha o menu
 
     love.graphics.setColor(100, 100, 100)
 
@@ -92,16 +95,16 @@ function love.mousepressed (x, y, button, istouch)
 
 --botão sair
     if button == 1 then
-        if x >= 30 and x <= 30 + bl1 and y >= 30 and y <= 30 + bl2 then
+        if x >= 30 and x <= 30 + bl1 and y >= 30 and y <= 30 + ba1 then
             love.event.quit()
         end
 
 --botão fechar menu        
-        if x >= 30 and x <= 30 + bl3 and y >= 50 and y <= 50 + bl4 then 
+        if x >= 30 and x <= 30 + bl2 and y >= 50 and y <= 50 + ba2 then 
             bl1=0
+            ba1=0
             bl2=0
-            bl3=0
-            bl4=0
+            ba2=0
         end
     end
 
@@ -111,9 +114,9 @@ function love.mousepressed (x, y, button, istouch)
     if button == 1 then
         if x >=10 and x <= 10 + 10 and y >= 10 and y <= 10 + 10 then
             bl1 = 150
-            bl2 = 10
-            bl3 = 150
-            bl4= 10
+            ba1 = 10
+            bl2 = 150
+            ba2= 10
 
         end
     end
