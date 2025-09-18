@@ -1,6 +1,7 @@
 nameVP = "Victor"
 showText = false
-
+bl1 = 0
+bl2 = 0
 
 
 function love.load()
@@ -55,7 +56,9 @@ function love.draw()
 end
 
     
-    love.graphics.rectangle('fill', 300, 250, 150, 150)    --desenho botao
+    love.graphics.rectangle('fill', 10, 10, 10, 10)    --desenho botao menu
+
+    love.graphics.rectangle('fill', 30, 30, bl1, bl2)  --desenho botao exit
 
 
 end
@@ -64,14 +67,24 @@ end
 
 function love.mousepressed (x, y, button, istouch)
 
-    
-    if button == 1 then                                                     --botao clicavel
-        if x >=300 and x <= 300 + 150 and y >= 250 and y <= 250 + 150 then
+--botao exit
+    if button == 1 then
+        if x >= 30 and x <= 30 + bl1 and y >= 30 and y <= 30 + bl2 then
             love.event.quit()
         end
     end
-end
 
+    
+
+--botao menu
+    if button == 1 then
+        if x >=10 and x <= 10 + 10 and y >= 10 and y <= 10 + 10 then
+            bl1 = 150
+            bl2 = 10
+
+        end
+    end
+end
 
 
 
