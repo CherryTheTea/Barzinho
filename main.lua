@@ -8,8 +8,13 @@ function love.load()
 
     love.window.setMode(800, 600, {resizable=true, vsync=0, minwidth=400, minheight=300})
 
-    vitorsus = love.graphics.newImage("vitorSUS.png")
 
+--sprite victor
+    victorbase = love.graphics.newImage('victorbase.png')
+    victorsus = love.graphics.newImage("victorSUS.png")
+
+
+--fundo
     bar = love.graphics.newImage("bar.jpg")
 
 end
@@ -18,11 +23,13 @@ end
 
 function love.keypressed(key, scancode, isrepeat)
 
-    if key == "x" then  --mostrar texto
+--mostrar texto
+    if key == "x" then
         showText = true
     end
 
-   if key == "escape" then --sair do jogo
+--exit
+   if key == "escape" then
       love.event.quit()
 
    end
@@ -32,33 +39,40 @@ end
 
 function love.draw()
 
-    love.graphics.draw(bar, 0, 0, 0, 1.2, 1.2)             --fundo bar
+--fundo bar
+    love.graphics.draw(bar, 0, 0, 0, 1.2, 1.2)
 
-    love.graphics.setColor(100, 100, 100)                  --sprite victor
-    love.graphics.draw(vitorsus, 150, 18, 0, 0.4, 0.4)
+--sprite victor
+    love.graphics.draw(victorbase, 150, 18, 0, 0.4, 0.4)
 
 
 --textbox
-
-    love.graphics.setColor(0, 0, 0)                        --caixa de texto
+    love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", 150, 450, 500, 100)
     
     love.graphics.setColor(100, 0, 100)
     love.graphics.rectangle("line", 150, 450, 500, 100)
     
-    love.graphics.print(nameVP, 150, 425)                  --nome victor
+--nome victor
+    love.graphics.print(nameVP, 150, 425)
 
     love.graphics.setColor(100, 100, 100)
     
-    if showText == true then                               --texto da caixa
-    
+
+--texto da caixa
+    if showText == true then
+
+    victorbase = victorsus
     love.graphics.print("isso é cringe, cara", 160, 460 )
 end
 
-    
-    love.graphics.rectangle('fill', 10, 10, 10, 10)    --desenho botao menu
 
-    love.graphics.rectangle('fill', 30, 30, bl1, bl2)  --desenho botao exit
+--desenhos botoes
+--menu
+    love.graphics.rectangle('fill', 10, 10, 10, 10)
+
+--exit
+    love.graphics.rectangle('fill', 30, 30, bl1, bl2)
 
 
 end
@@ -74,7 +88,6 @@ function love.mousepressed (x, y, button, istouch)
         end
     end
 
-    
 
 --botao menu
     if button == 1 then
