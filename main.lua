@@ -1,5 +1,13 @@
+
 nameVP = "Victor"
 showText = false
+
+--conferir seleção de objeto arrastável
+sel = 0
+
+--posição de objeto arrastável no espaço
+rectpx = 200 
+rectpy = 200
 
 -- bl = botao largura
 -- ba = botao altura
@@ -44,9 +52,11 @@ end
 function love.draw()
 
 --fundo bar
+    love.graphics.setColor(100, 100, 100)
     love.graphics.draw(bar, 0, 0, 0, 1.2, 1.2)
 
 --sprite victor
+    love.graphics.setColor(100, 100, 100)
     love.graphics.draw(victorbase, 150, 18, 0, 0.4, 0.4)
 
 
@@ -58,6 +68,7 @@ function love.draw()
     love.graphics.rectangle("line", 150, 450, 500, 100)
     
 --nome victor
+    love.graphics.setColor(100, 0, 100)
     love.graphics.print(nameVP, 150, 425)
 
     love.graphics.setColor(100, 100, 100)
@@ -66,16 +77,19 @@ function love.draw()
 --texto da caixa
     if showText == true then
 
-    victorbase = victorsus
-    love.graphics.print("isso é cringe, cara", 160, 460 )
-end
+       victorbase = victorsus
+       love.graphics.setColor(100, 100, 100)
+       love.graphics.print("isso é cringe, cara", 160, 460 )
+    end
 
 
 --desenhos botoes
 --menu
+    love.graphics.setColor(100, 100, 100)
     love.graphics.rectangle('fill', 10, 10, 10, 10)
 
 --exit
+    love.graphics.setColor(100, 100, 100)
     love.graphics.rectangle('fill', 30, 30, bl1, ba1)
 
 --fechar menu
@@ -85,9 +99,31 @@ end
 
     love.graphics.setColor(100, 100, 100)
 
+--objeto arrastável + colorir objeto
+    x = love.mouse.getX( )
+    y = love.mouse.getY( )
+
+    if x >= rectpx and x <= rectpx + 50 and y >= rectpy and y <= rectpy + 50 then
+        love.graphics.setColor(0, 0, 100)
+    else
+        love.graphics.setColor(100, 100, 100)
+    end
+    love.graphics.rectangle('fill', rectpx, rectpy, 50, 50)
+
+end
+
+
+
+function love.mousemoved (x, y, dx, dy, istouch)
+--mover objeto arrastável
+    if sel == 1 then
+        rectpx = rectpx + dx
+        rectpy = rectpy + dy
+    end
 
 
 end
+
 
 
 
@@ -108,7 +144,12 @@ function love.mousepressed (x, y, button, istouch)
         end
     end
 
-    
+--agarrar objeto arrastável
+    sel = 0
+    if x >= rectpx and x <= rectpx + 50 and y >= rectpy and y <= rectpy + 50 then
+        sel = 1
+        
+    end
 
 --botao menu
     if button == 1 then
@@ -120,4 +161,11 @@ function love.mousepressed (x, y, button, istouch)
 
         end
     end
+end
+
+
+function love.mousereleased(x, y, button)
+-- soltar objeto arrastável
+    sel = 0    
+    
 end
