@@ -16,7 +16,7 @@ ba1 = 0
 bl2 = 0
 ba2 = 0
 
---estado de telas de jogo (menu/ opcoes/ jogo/ etc)
+--estado de telas de jogo (menu - 1/ opcoes/ jogo - 2/ etc)
 state = 1
 
 
@@ -24,6 +24,9 @@ state = 1
 function love.load()
 
     love.window.setMode(800, 600, {resizable=true, vsync=0, minwidth=400, minheight=300})
+
+--selecao de numero aleatorio
+    randomnumber = love.math.random(1, 2)
 
 --sprite victor
     victorbase = love.graphics.newImage('victorbase.png')
@@ -75,9 +78,14 @@ function love.draw()
            love.graphics.setColor(100, 100, 100)
            love.graphics.draw(bar, 0, 0, 0, 1.2, 1.2)
 
---sprite victor
+--Sorteio + carregamento personagem
+           npc = randomnumber
            love.graphics.setColor(100, 100, 100)
-           love.graphics.draw(victorbase, 150, 18, 0, 0.4, 0.4)
+           if npc == 1 then
+                   love.graphics.draw(victorbase, 150, 18, 0, 0.4, 0.4)
+           elseif npc == 2 then
+                   love.graphics.draw(victorsus, 150, 18, 0, 0.4, 0.4)
+               end
 
 
 --textbox
