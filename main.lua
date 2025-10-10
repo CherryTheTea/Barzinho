@@ -1,3 +1,8 @@
+local component = require 'badr'
+local button    = require 'components.button'
+local main_menu
+local sub_menu
+
 
 nameVP = "Victor"
 showText = false
@@ -16,12 +21,16 @@ ba1 = 0
 bl2 = 0
 ba2 = 0
 
---estado de telas de jogo (menu - 1/ opcoes/ jogo - 2/ etc)
+--estado de telas de jogo (menu - 1/ jogo - 2/ opcoes - 3 /etc)
 state = 1
 
 
 
 function love.load()
+
+    ui_Initialization()
+
+    ui_init2()
 
     love.window.setMode(800, 600, {resizable=true, vsync=0, minwidth=400, minheight=300})
 
@@ -63,14 +72,14 @@ end
 function love.draw()
 
     if state == 1 then
+    
+       
 
 -- fundo menu principal
             love.graphics.setColor (0, 0, 0)
             love.graphics.rectangle('fill', 0, 0, 1920, 1080)
 
--- desenho botao iniciar
-            love.graphics.setColor(100, 100, 100)
-            love.graphics.rectangle('fill', 200, 200, 450, 100)
+      main_menu:draw()
 
     elseif state == 2 then
 
@@ -112,20 +121,8 @@ function love.draw()
 
 
 --desenhos botoes
---menu
-           love.graphics.setColor(100, 100, 100)
-           love.graphics.rectangle('fill', 10, 10, 10, 10)
 
---exit
-           love.graphics.setColor(100, 100, 100)
-           love.graphics.rectangle('fill', 30, 30, bl1, ba1)
-
---fechar menu
-           love.graphics.setColor(100, 100, 0)
-
-           love.graphics.rectangle('fill', 30, 50, bl2, ba2) -- fecha o menu
-
-           love.graphics.setColor(100, 100, 100)
+                  sub_menu:draw()
 
 --objeto arrastável + colorir objeto
            x = love.mouse.getX( )
@@ -140,11 +137,7 @@ function love.draw()
            love.graphics.draw(copos, rectpx, rectpy, 0, 0.1, 0.1)
     --       love.graphics.rectangle('fill', rectpx, rectpy, 50, 50)
     end
-
-
 end
-
-
 
 function love.mousemoved (x, y, dx, dy, istouch)
 --mover objeto arrastável
@@ -152,57 +145,17 @@ function love.mousemoved (x, y, dx, dy, istouch)
         rectpx = rectpx + dx
         rectpy = rectpy + dy
     end
-
-
 end
-
 
 
 
 function love.mousepressed (x, y, button, istouch)
 
---botão menu principal
-    if button == 1 then
-        if x >= 30 and x <= 30 + bl1 and y >= 30 and y <= 30 + ba1 then
-            state = 1
-        end
 
---botão fechar menu        
-        if x >= 30 and x <= 30 + bl2 and y >= 50 and y <= 50 + ba2 then 
-            bl1=0
-            ba1=0
-            bl2=0
-            ba2=0
-        end
-    end
-
---agarrar objeto arrastável
+    --agarrar objeto arrastável
     sel = 0
     if x >= rectpx and x <= rectpx + 50 and y >= rectpy and y <= rectpy + 50 then
         sel = 1
-        
-    end
-
---botao menu
-    if button == 1 then
-        if x >=10 and x <= 10 + 10 and y >= 10 and y <= 10 + 10 then
-            bl1 = 150
-            ba1 = 10
-            bl2 = 150
-            ba2= 10
-
-        end
-    end
-
-
--- botao menu principal
-    if button == 1 then
-
-        if x >= 200 and x <= 200 + 400 and y >= 200 and y <= 200 + 100 then
-
-            state = 2
-
-        end
     end
 
 end
@@ -212,4 +165,44 @@ function love.mousereleased(x, y, button)
 -- soltar objeto arrastável
     sel = 0    
     
+end
+
+
+--menu princial
+function ui_Initialization()
+    love.graphics.setBackgroundColor({ 1, 1, 1 })
+    local clicks = 0
+    main_menu = component { column = true, gap = 10 }
+        + button { text = 'New game', width = 200, onClick = function() state = 2 end }
+        + button { text = 'Settings', width = 200 }
+        + button { text = 'Credits', width = 200 }
+        + button { text = 'Quit', width = 200, onClick = function() love.event.quit() end }
+
+    main_menu:updatePosition(
+        love.graphics.getWidth() * 0.5 - main_menu.width * 0.5,
+        love.graphics.getHeight() * 0.5 - main_menu.height * 0.5
+    )
+end
+
+function love.update()
+    main_menu:update()
+end
+
+--menu em jogo
+function ui_init2()  
+     local clicks = 0
+    sub_menu = component { column = true, gap = 10 }
+        + button { text = 'Continue', width = 200, onClick = function() state = 2 end }
+        + button { text = 'Settings', width = 200 }
+        + button { text = 'Back to Menu', width = 200, onClick = function() state = 1 end }
+        + button { text = 'Quit', width = 200, onClick = function() love.event.quit() end }
+
+    sub_menu:updatePosition(
+        love.graphics.getWidth() * 0.5 - sub_menu.width * 0.5,
+        love.graphics.getHeight() * 0.5 - sub_menu.height * 0.5
+    )
+end
+
+function love.update()
+    sub_menu:update()
 end
