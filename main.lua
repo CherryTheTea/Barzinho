@@ -2,6 +2,7 @@ local component = require 'badr'
 local button    = require 'components.button'
 local main_menu
 local sub_menu
+local open_menu
 
 
 nameVP = "Victor"
@@ -24,6 +25,8 @@ ba2 = 0
 --estado de telas de jogo (menu - 1/ jogo - 2/ opcoes - 3 /etc)
 state = 1
 
+pause = false
+
 
 
 function love.load()
@@ -31,6 +34,8 @@ function love.load()
     ui_Initialization()
 
     ui_init2()
+
+    ui_init3()
 
     love.window.setMode(800, 600, {resizable=true, vsync=0, minwidth=400, minheight=300})
 
@@ -72,71 +77,78 @@ end
 function love.draw()
 
     if state == 1 then
-    
-       
 
 -- fundo menu principal
-            love.graphics.setColor (0, 0, 0)
-            love.graphics.rectangle('fill', 0, 0, 1920, 1080)
+        love.graphics.setColor (0, 0, 0)
+        love.graphics.rectangle('fill', 0, 0, 1920, 1080)
 
-      main_menu:draw()
+        main_menu:draw()
 
     elseif state == 2 then
 
 --fundo bar
-           love.graphics.setColor(100, 100, 100)
-           love.graphics.draw(bar, 0, 0, 0, 1.2, 1.2)
+        love.graphics.setColor(100, 100, 100)
+        love.graphics.draw(bar, 0, 0, 0, 1.2, 1.2)
 
 --Sorteio + carregamento personagem
-           npc = randomnumber
-           love.graphics.setColor(100, 100, 100)
-           if npc == 1 then
-                   love.graphics.draw(victorbase, 150, 18, 0, 0.4, 0.4)
-           elseif npc == 2 then
-                   love.graphics.draw(victorsus, 150, 18, 0, 0.4, 0.4)
-               end
+        npc = randomnumber
+        love.graphics.setColor(100, 100, 100)
+        if npc == 1 then
+               love.graphics.draw(victorbase, 150, 18, 0, 0.4, 0.4)
+        elseif npc == 2 then
+               love.graphics.draw(victorsus, 150, 18, 0, 0.4, 0.4)
+        end
 
 
 --textbox
-           love.graphics.setColor(0, 0, 0)
-           love.graphics.rectangle("fill", 150, 450, 500, 100)
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", 150, 450, 500, 100)
     
-           love.graphics.setColor(100, 0, 100)
-           love.graphics.rectangle("line", 150, 450, 500, 100)
+        love.graphics.setColor(100, 0, 100)
+        love.graphics.rectangle("line", 150, 450, 500, 100)
     
 --nome victor
-           love.graphics.setColor(100, 0, 100)
-           love.graphics.print(nameVP, 150, 425)
+        love.graphics.setColor(100, 0, 100)
+        love.graphics.print(nameVP, 150, 425)
 
-           love.graphics.setColor(100, 100, 100)
+        love.graphics.setColor(100, 100, 100)
     
 
 --texto da caixa
-           if showText == true then
+        if showText == true then
 
-               victorbase = victorsus
-               love.graphics.setColor(100, 100, 100)
-               love.graphics.print("isso é cringe, cara", 160, 460 )
-           end
+            victorbase = victorsus
+            love.graphics.setColor(100, 100, 100)
+            love.graphics.print("isso é cringe, cara", 160, 460 )
+        end
 
-
---desenhos botoes
-
-                  sub_menu:draw()
 
 --objeto arrastável + colorir objeto
-           x = love.mouse.getX( )
-           y = love.mouse.getY( )
+        x = love.mouse.getX( )
+        y = love.mouse.getY( )
 
-           if x >= rectpx and x <= rectpx + 50 and y >= rectpy and y <= rectpy + 50 then
-                love.graphics.setColor(0, 0, 100)
-           else
-                love.graphics.setColor(100, 100, 100)
-           end
+        if x >= rectpx and x <= rectpx + 50 and y >= rectpy and y <= rectpy + 50 then
+             love.graphics.setColor(0, 0, 100)
+        else
+             love.graphics.setColor(100, 100, 100)
+        end
 
-           love.graphics.draw(copos, rectpx, rectpy, 0, 0.1, 0.1)
-    --       love.graphics.rectangle('fill', rectpx, rectpy, 50, 50)
+        love.graphics.draw(copos, rectpx, rectpy, 0, 0.1, 0.1)
+    --  love.graphics.rectangle('fill', rectpx, rectpy, 50, 50)
+
+--UI
+        if pause == true then
+            sub_menu:draw()
+        else
+            open_menu:draw()
+        end
+
+    elseif state == 3 then
+        love.graphics.setColor (100, 0, 0)
+        love.graphics.rectangle('fill', 0, 0, 1920, 1080)
+
     end
+
 end
 
 function love.mousemoved (x, y, dx, dy, istouch)
@@ -174,7 +186,7 @@ function ui_Initialization()
     local clicks = 0
     main_menu = component { column = true, gap = 10 }
         + button { text = 'New game', width = 200, onClick = function() state = 2 end }
-        + button { text = 'Settings', width = 200 }
+        + button { text = 'Settings', width = 200, onClick = function() state = 3 end }
         + button { text = 'Credits', width = 200 }
         + button { text = 'Quit', width = 200, onClick = function() love.event.quit() end }
 
@@ -185,14 +197,34 @@ function ui_Initialization()
 end
 
 function love.update()
-    main_menu:update()
+    if state == 1 then
+        main_menu:update()
+    elseif state == 2 then
+        open_menu:update()
+        sub_menu:update()
+    end
 end
 
---menu em jogo
+
+--abrir menu
 function ui_init2()  
      local clicks = 0
+    open_menu = component { column = true, gap = 10 }
+        + button { text = 'menu', width = 200, onClick = function() pause = true end }
+
+    open_menu:updatePosition(
+        love.graphics.getWidth() * 0.5 - open_menu.width * 2,
+        love.graphics.getHeight() * 0.5 - open_menu.height * 9.5
+    )
+end
+
+
+--menu em jogo
+function ui_init3()
+     love.graphics.setBackgroundColor({ 1, 1, 1 })  
+     local clicks = 0
     sub_menu = component { column = true, gap = 10 }
-        + button { text = 'Continue', width = 200, onClick = function() state = 2 end }
+        + button { text = 'Continue', width = 200, onClick = function() pause = false end }
         + button { text = 'Settings', width = 200 }
         + button { text = 'Back to Menu', width = 200, onClick = function() state = 1 end }
         + button { text = 'Quit', width = 200, onClick = function() love.event.quit() end }
@@ -201,8 +233,4 @@ function ui_init2()
         love.graphics.getWidth() * 0.5 - sub_menu.width * 0.5,
         love.graphics.getHeight() * 0.5 - sub_menu.height * 0.5
     )
-end
-
-function love.update()
-    sub_menu:update()
 end
