@@ -3,10 +3,12 @@ local button    = require 'components.button'
 local main_menu
 local sub_menu
 local open_menu
+local LoveDialogue = require "LoveDialogue"
+local myDialogue
 
 
-nameVP = "Victor"
-showText = false
+
+text = 0
 
 --conferir seleção de objeto arrastável
 sel = 0
@@ -22,7 +24,7 @@ ba1 = 0
 bl2 = 0
 ba2 = 0
 
---estado de telas de jogo (menu - 1/ jogo - 2/ opcoes - 3 /etc)
+--estado de telas de jogo (menu - 1/ jogo - 2/ opcoes - 3 / etc)
 state = 1
 
 pause = false
@@ -37,7 +39,10 @@ function love.load()
 
     ui_init3()
 
+    myDialogue = LoveDialogue.play("dialogue.ld")
+
     love.window.setMode(800, 600, {resizable=true, vsync=0, minwidth=400, minheight=300})
+
 
 --selecao de numero aleatorio
     randomnumber = love.math.random(1, 2)
@@ -58,14 +63,21 @@ end
 
 
 
+function love.update(dt)
+    if myDialogue then
+        myDialogue:update(dt)
+    end
+end
+
+
+
 function love.keypressed(key, scancode, isrepeat)
 
---mostrar texto
-    if key == "x" then
-        showText = true
+    if myDialogue then
+        myDialogue:keypressed(key)
     end
 
---exit
+
    if key == "escape" then
       love.event.quit()
 
@@ -86,6 +98,7 @@ function love.draw()
 
     elseif state == 2 then
 
+
 --fundo bar
         love.graphics.setColor(100, 100, 100)
         love.graphics.draw(bar, 0, 0, 0, 1.2, 1.2)
@@ -100,27 +113,11 @@ function love.draw()
         end
 
 
---textbox
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", 150, 450, 500, 100)
-    
-        love.graphics.setColor(100, 0, 100)
-        love.graphics.rectangle("line", 150, 450, 500, 100)
-    
---nome victor
-        love.graphics.setColor(100, 0, 100)
-        love.graphics.print(nameVP, 150, 425)
-
-        love.graphics.setColor(100, 100, 100)
-    
-
---texto da caixa
-        if showText == true then
-
-            victorbase = victorsus
-            love.graphics.setColor(100, 100, 100)
-            love.graphics.print("isso é cringe, cara", 160, 460 )
+--Caixa de texto + dialogo
+        if myDialogue then
+            myDialogue:draw()
         end
+
 
 
 --objeto arrastável + colorir objeto
@@ -201,9 +198,13 @@ function love.update()
         main_menu:update()
     elseif state == 2 then
         open_menu:update()
-        sub_menu:update()
+        if pause then
+            sub_menu:update()
+        end
+
     end
 end
+
 
 
 --abrir menu
