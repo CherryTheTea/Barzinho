@@ -1,17 +1,36 @@
-Character: This is a basic dialogue line.
-AnotherCharacter: This will show after the first line.
-Character: This text will {wave:1}wave{/wave} and {color:FF0000}be red{/color}.
-Character: This text will {jiggle:2}jiggle{/jiggle} and {shake:1}shake{/shake}.
-Character: You can also make text {bold:2}bold{/bold} or {italic:left}italic{/italic}.
+Bartender: Bem-vindo! Como posso ajudá-lo?
+Victor: Saudações...
+Victor: É um lugar deveras interessante que vocês tem aqui...
+Bartender: Sim, eu também fiquei impressionado a primeira vez!
+Bartender: Gostaria de algo para beber?
+Victor: Vejamos...
+Victor: O que você recomendaria?
+
 [start]
-Character: Make a choice:
--> Go to scene A [target:sceneA]
--> Go to scene B [target:sceneB]
+Victor: O que você recomendaria?
+-> Algo amargo [target:sceneA]
+-> Algo doce [target:sceneB]
+-> Algo {color:FF0000}vermelho{/color} [target:sceneC]
 
 [sceneA]
-Character: You chose scene A!
+Victor: ...
+Victor: {shake:1}Cof! Cof! Cof!{/shake}
+Victor: Tão... {wave:1}Amargo...{/wave}
+Bartender: É...
+Bartender: Perdão... (end)
 
 [sceneB]
-Character: You chose scene B!
+Victor: ...
+Victor: Um sabor realmente infantil...
+Victor: Mas admito... {wave:1}não é ruim{/wave}
+Bartender: Fico feliz que gostou...
+Bartender: Eu acho... (?)
+Victor: É... aceitável
+Victor: Mas obrigado de qualquer forma
+Victor: Se me dá licença, vou me juntar aquela mesa. (end)
 
-Character: This is the end of our conversation. (end)
+[sceneC]
+Victor: Isso é {wave:1}delicioso!{/wave}
+Victor: Suas habilidades como Bartender são realmente impressionantes
+Victor: Com certeza retornarei mais vezes
+Victor: Pode ficar com o troco (end)

@@ -39,7 +39,7 @@ function love.load()
 
     ui_init3()
 
-    myDialogue = LoveDialogue.play("dialogue.ld")
+    myDialogue = LoveDialogue.play("dialogue.ld", {theme = 'theme.txt'})
 
     love.window.setMode(800, 600, {resizable=true, vsync=0, minwidth=400, minheight=300})
 
@@ -114,6 +114,9 @@ function love.draw()
 
 
 --Caixa de texto + dialogo
+
+        love.graphics.print(tostring(myDialogue.currentLine), 300, 250)
+
         if myDialogue then
             myDialogue:draw()
         end
