@@ -33,11 +33,17 @@ pause = false
 
 function love.load()
 
+    love.window.setMode(800, 600, {resizable=true, vsync=0, minwidth=400, minheight=300})
+
     ui_Initialization()
 
     ui_init2()
 
     ui_init3()
+
+    ui_init4()
+
+    ui_init5()
 
     myDialogue = LoveDialogue.play("dialogue.ld", {theme = 'theme.txt'})
 
@@ -48,12 +54,15 @@ function love.load()
     randomnumber = love.math.random(1, 2)
 
 --sprite victor
-    victorbase = love.graphics.newImage('victorbase.png')
-    victorsus = love.graphics.newImage("victorSUS.png")
+    victor = {}
+    victor [1] = love.graphics.newImage('victorbase.png')
+    victor [2] = love.graphics.newImage("victorSUS.png")
 
 
 --fundo
     bar = love.graphics.newImage("bar.jpg")
+    balcao = love.graphics.newImage("balcao.png")
+    menu = love.graphics.newImage("menu.png")
 
 
 --assets
@@ -91,8 +100,8 @@ function love.draw()
     if state == 1 then
 
 -- fundo menu principal
-        love.graphics.setColor (0, 0, 0)
-        love.graphics.rectangle('fill', 0, 0, 1920, 1080)
+        love.graphics.setColor(100, 100, 100)
+        love.graphics.draw(menu, 0, 0, 0, 1, 1)
 
         main_menu:draw()
 
@@ -103,38 +112,28 @@ function love.draw()
         love.graphics.setColor(100, 100, 100)
         love.graphics.draw(bar, 0, 0, 0, 1.2, 1.2)
 
---Sorteio + carregamento personagem
-        npc = randomnumber
-        love.graphics.setColor(100, 100, 100)
-        if npc == 1 then
-               love.graphics.draw(victorbase, 150, 18, 0, 0.4, 0.4)
-        elseif npc == 2 then
-               love.graphics.draw(victorsus, 150, 18, 0, 0.4, 0.4)
-        end
 
-
---Caixa de texto + dialogo
+--Caixa de texto pt1
 
         love.graphics.print(tostring(myDialogue.currentLine), 300, 250)
 
+
+--Troca de Sprites
+        if myDialogue.currentLine >= 2 and myDialogue.currentLine <= 6 then
+            love.graphics.draw(victor [1], 150, 18, 0, 0.4, 0.4)
+        end
+
+        if myDialogue.currentLine >= 7 then
+            love.graphics.draw(victor [2], 150, 18, 0, 0.4, 0.4)
+        end
+
+
+--Caixa de texto pt2
         if myDialogue then
             myDialogue:draw()
         end
 
 
-
---objeto arrastável + colorir objeto
-        x = love.mouse.getX( )
-        y = love.mouse.getY( )
-
-        if x >= rectpx and x <= rectpx + 50 and y >= rectpy and y <= rectpy + 50 then
-             love.graphics.setColor(0, 0, 100)
-        else
-             love.graphics.setColor(100, 100, 100)
-        end
-
-        love.graphics.draw(copos, rectpx, rectpy, 0, 0.1, 0.1)
-    --  love.graphics.rectangle('fill', rectpx, rectpy, 50, 50)
 
 --UI
         if pause == true then
@@ -149,7 +148,33 @@ function love.draw()
 
     end
 
+    if state == 4 then
+
+    love.graphics.setColor (100, 100, 100)
+    love.graphics.draw(balcao, -50, -20, 0, 0.8, 0.8)
+
+            drink_menu:draw()
+
+--objeto arrastável + colorir objeto
+
+        x = love.mouse.getX( )
+        y = love.mouse.getY( )
+
+        if x >= rectpx and x <= rectpx + 50 and y >= rectpy and y <= rectpy + 50 then
+             love.graphics.setColor(0, 0, 100)
+        else
+             love.graphics.setColor(100, 100, 100)
+        end
+
+        love.graphics.draw(copos, rectpx, rectpy, 0, 0.1, 0.1)
+    --  love.graphics.rectangle('fill', rectpx, rectpy, 50, 50)
+
+
+
+end 
+
 end
+
 
 function love.mousemoved (x, y, dx, dy, istouch)
 --mover objeto arrastável
@@ -200,11 +225,13 @@ function love.update()
     if state == 1 then
         main_menu:update()
     elseif state == 2 then
-        open_menu:update()
-        if pause then
+        open_menu:update()  
+        open_Dmenu:update() 
+     if pause then
             sub_menu:update()
         end
-
+    elseif state ==4 then
+        drink_menu: update() 
     end
 end
 
@@ -238,3 +265,24 @@ function ui_init3()
         love.graphics.getHeight() * 0.5 - sub_menu.height * 0.5
     )
 end
+
+function ui_init4()  
+    love.graphics.setBackgroundColor({ 1, 1, 1 })
+    local clicks = 0
+    drink_menu = component { column = true, gap = 10 }
+        + button { text = 'Back', width = 200, onClick = function() state = 2 end }
+
+
+    drink_menu:updatePosition(
+        love.graphics.getWidth() * 0.5 - drink_menu.width * 2,
+        love.graphics.getHeight() * 0.5 - drink_menu.height * 9.5
+    )
+end
+
+function ui_init5()  
+     local clicks = 0
+
+    open_Dmenu = component { column = true, gap = 10 }
+        + button { text = 'Drinks', width = 200, x = love.graphics.getWidth() - 200, onClick = function() state = 4 end }
+end
+
